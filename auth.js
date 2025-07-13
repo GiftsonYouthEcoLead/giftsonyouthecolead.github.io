@@ -1,65 +1,59 @@
-import { auth } from './firebase.js';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  setPersistence,
-  browserLocalPersistence,
-  browserSessionPersistence,
-  sendEmailVerification
-} from 'firebase/auth';
+// Import Firebase SDK functions
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
-const signupForm = document.getElementById("signup-form");
-if (signupForm) {
-  signupForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("signup-email").value;
-    const password = document.getElementById("signup-password").value;
+// Your Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCecs-rafW9Wz2oc-elmp-YZplYpKhgLuM",
+  authDomain: "youthecoleadauth.firebaseapp.com",
+  projectId: "youthecoleadauth",
+  storageBucket: "youthecoleadauth.appspot.com",
+  messagingSenderId: "233790621622",
+  appId: "1:233790621622:web:7aaed7bc25e21b52832317"
+};
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        sendEmailVerification(userCredential.user).then(() => {
-          document.getElementById("message").textContent = "Signup successful! Please verify your email.";
-          auth.signOut();
-        });
-      })
-      .catch((error) => {
-        document.getElementById("message").textContent = error.message;
-      });
-  });
-}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-const loginForm = document.getElementById("login-form");
-if (loginForm) {
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value;
-    const remember = document.getElementById("remember-me").checked;
-    const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
+// Login form handling
+const loginForm = document.getElementById('login-form');
+const message = document.getElementById('message');
 
-    setPersistence(auth, persistence)
-      .then(() => signInWithEmailAndPassword(auth, email, password))
-      .then(() => {
-        window.location.href = "dashboard.html";
-      })
-      .catch((error) => {
-        document.getElementById("message").textContent = error.message;
-      });
-  });
-}
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-window.forgotPassword = () => {
-  const email = document.getElementById("login-email").value;
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    message.style.color = "green";
+    message.textContent = "Login successful! Redirecting...";
+
+    setTimeout(() => {
+      window.location.href = "dashboard.html"; // You can change this
+    }, 2000);
+  } catch (error) {
+    message.style.color = "red";
+    message.textContent = error.message;
+  }
+});
+
+// Forgot password
+window.forgotPassword = function () {
+  const email = document.getElementById('login-email').value;
   if (!email) {
-    document.getElementById("message").textContent = "Enter your email to reset password.";
+    message.style.color = "orange";
+    message.textContent = "Please enter your email first.";
     return;
   }
-  sendPasswordResetEmail(auth, email)
+
+  auth.sendPasswordResetEmail(email)
     .then(() => {
-      document.getElementById("message").textContent = "Reset link sent! Check your inbox.";
+      message.style.color = "green";
+      message.textContent = "Password reset email sent!";
     })
     .catch((error) => {
-      document.getElementById("message").textContent = error.message;
-    });
-};
+      message.style.color = "red";
+      message.textContent
