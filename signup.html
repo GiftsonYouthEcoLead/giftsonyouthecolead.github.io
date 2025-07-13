@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Signup | Youth Eco Lead</title>
   <script type="module" src="auth.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="form-container">
-    <h2>Create Account</h2>
+    <h2>Create Your Account</h2>
     <form id="signup-form">
       <input type="email" id="signup-email" placeholder="Enter email" required />
+
       <div class="password-wrapper">
         <input type="password" id="signup-password" placeholder="Create password" required />
-        <button type="button" onclick="toggleVisibility('signup-password')">👁</button>
+        <span class="eye-icon" onclick="toggleVisibility('signup-password')">👁️</span>
       </div>
-      <button type="submit">Sign Up</button>
+
+      <button type="submit">Signup</button>
     </form>
+
     <p id="message"></p>
     <p>Already have an account? <a href="login.html">Login here</a></p>
   </div>
+
   <script>
     function toggleVisibility(id) {
       const input = document.getElementById(id);
