@@ -1,3 +1,4 @@
+alert("✅ auth.js is loading");
 console.log("✅ auth.js is loading");
 // auth.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
