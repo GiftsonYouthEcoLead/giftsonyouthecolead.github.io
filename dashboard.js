@@ -14,27 +14,33 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// 🟢 Display user info
-onAuthStateChanged(auth, (user) => {
+// 🟢 Wait until the page finishes loading
+document.addEventListener("DOMContentLoaded", () => {
   const emailDisplay = document.getElementById("user-email");
-  if (user) {
-    emailDisplay.textContent = "Logged in as: " + user.email;
-  } else {
-    // If no user, redirect to login
-    window.location.href = "login.html";
-  }
-});
+  const logoutBtn = document.getElementById("logout-btn");
 
-// 🔴 Logout
-const logoutBtn = document.getElementById("logout-btn");
-logoutBtn.addEventListener("click", () => {
-  signOut(auth)
-    .then(() => {
-      alert("✅ Logged out successfully");
+  // ✅ Display user info or redirect
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      emailDisplay.textContent = "Logged in as: " + user.email;
+    } else {
       window.location.href = "login.html";
-    })
-    .catch((error) => {
-      alert("❌ Logout failed: " + error.message);
-      console.error("Logout error:", error);
+    }
+  });
+
+  // 🔴 Logout button
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth)
+        .then(() => {
+          alert("✅ Logged out successfully");
+          window.location.href = "login.html";
+        })
+        .catch((error) => {
+          alert("❌ Logout failed: " + error.message);
+        });
     });
+  } else {
+    console.error("❌ Logout button not found in DOM");
+  }
 });
