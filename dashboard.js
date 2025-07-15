@@ -1,3 +1,4 @@
+// dashboard.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
@@ -5,25 +6,35 @@ const firebaseConfig = {
   apiKey: "AIzaSyCecs-rafW9Wz2oc-elmp-YZplYpKhgLuM",
   authDomain: "youthecoleadauth.firebaseapp.com",
   projectId: "youthecoleadauth",
-  appId: "1:855744473089:web:e823c5426b4bfc2dbd0839"
+  storageBucket: "youthecoleadauth.appspot.com",
+  messagingSenderId: "582086230952",
+  appId: "1:582086230952:web:bcb05f79c2c015b7ae2a29"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const userEmail = document.getElementById("user-email");
-const logoutBtn = document.getElementById("logout-btn");
-
+// 🟢 Display user info
 onAuthStateChanged(auth, (user) => {
+  const emailDisplay = document.getElementById("user-email");
   if (user) {
-    userEmail.textContent = `Logged in as: ${user.email}`;
+    emailDisplay.textContent = "Logged in as: " + user.email;
   } else {
+    // If no user, redirect to login
     window.location.href = "login.html";
   }
 });
 
+// 🔴 Logout
+const logoutBtn = document.getElementById("logout-btn");
 logoutBtn.addEventListener("click", () => {
-  signOut(auth).then(() => {
-    window.location.href = "login.html";
-  });
+  signOut(auth)
+    .then(() => {
+      alert("✅ Logged out successfully");
+      window.location.href = "login.html";
+    })
+    .catch((error) => {
+      alert("❌ Logout failed: " + error.message);
+      console.error("Logout error:", error);
+    });
 });
